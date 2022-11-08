@@ -1,34 +1,64 @@
 # Arnold Avalos Torres
 # No. Control: 18420428
 
+import json
 
-def postal():
-    archivo = open("CPdescarga.txt","r")
+def codigospostales(municipio):
+    codigosP = {}
+    archivo = open('CPdescarga.txt', 'r')
+
     cadena = archivo.read()
-    lista = cadena.split("\n")
+    cadena = cadena.replace('||','| |')
+    listaCP = cadena.split("\n")
+
     archivo.close()
-    cp = set()
-    for pos in lista[2:]:
-        pos1 = pos.split("|")
-        tup = (pos1[0], pos1[1],  pos1[13])
-        cp.add(tup)
-    return cp
+
+    i = 1
+
+    for mnp in listaCP:
+        codigos = mnp.split("|")
+        cp = {}
+        if len(codigos)>1 :
+            if codigos[3] == municipio:
+                cp["d_codigo"] = codigos[0]
+                cp["d_tipo_asenta"] = codigos[2]
+                cp["d_zona"] = codigos[13]
+                codigosP[f"{i}"] = cp
+                i=i+1
+    retornoList = json.dumps(codigosP)
+    print(retornoList)
+
+codigospostales('Jiquilpan')
 
 
-def municipio(mun):
-    pos = postal()
-    munici = []
+def codigospostales2(estado):
+    codigosP = {}
+    archivo = open('CPdescarga.txt', 'r')
 
-    for i in pos:
-        if mun == i[]:
-            dicnum = {}
-            dicnum["Codigo Postal"] = i[0]
-            dicnum["Asentamiento"] = i[1]
-            dicnum["Zona"] = i[13]
-            munici.append(dicnum)
-    return munici
+    cadena = archivo.read()
+    cadena = cadena.replace('||','| |')
+    listaCP = cadena.split("\n")
 
-print(municipio("Jiquilpan"))
+    archivo.close()
+
+    retornoList = []
+
+    for mnp in listaCP:
+        codigos = mnp.split("|")
+        # print(codigos)
+        cp = {}
+        if len(codigos) > 1:
+            if codigos[4] == estado:
+                cp["d_codigo"] = codigos[0]
+                cp["D_mnpio"] = codigos[3]
+                retornoList.append(cp)
+    codigosP[estado] = retornoList
+    retornoList = json.dumps(codigosP)
+    print(retornoList)
+
+    # print(agendaSLP)
+
+codigospostales2('Michoacán de Ocampo')
 
 
 
